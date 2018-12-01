@@ -21,6 +21,11 @@ public class Game extends JFrame{
 		
 	}
 	
+	public void updateGame() {
+		//TODO: implement updateGame function
+		
+	}
+	
 	
 	
 	

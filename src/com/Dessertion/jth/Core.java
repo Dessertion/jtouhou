@@ -51,8 +51,7 @@ public class Core implements Runnable {
 				// do as many game updates as needed, potentially play catchup
 				while ((currentTime - lastUpdateTime > UPDATE_INTERVAL_TIME)
 						&& (updateCount < MAX_UPDATES_BEFORE_RENDER)) {
-					// TODO: implement updateGame function
-
+					updateGame();
 					lastUpdateTime += UPDATE_INTERVAL_TIME;
 					updateCount++;
 				}
@@ -97,6 +96,10 @@ public class Core implements Runnable {
 		}
 		game.dispose();
 		return;
+	}
+
+	private void updateGame() {
+		game.updateGame();
 	}
 
 	public static void main(String[] args) {
