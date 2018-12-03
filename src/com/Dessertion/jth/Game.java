@@ -6,9 +6,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JPanel;
 
+import com.Dessertion.jth.entity.Bullet;
+import com.Dessertion.jth.entity.DamageableEntity;
 import com.Dessertion.jth.entity.Entity;
 import com.Dessertion.jth.entity.Player;
 
@@ -23,10 +26,12 @@ public class Game extends JPanel{
 	public static final int SCALE = 4;
 	public boolean hasWon = false;
 	
-	public Player player;
+	public static Player player;
 	
 	private InputHandler input;
-	public ArrayList<Entity> entities = new ArrayList<>();
+	public static ArrayList<Entity> entities = new ArrayList<>();
+	public static ArrayList<DamageableEntity> damageable = new ArrayList<>();
+	public static ArrayList<Bullet> bullets = new ArrayList<>();
 	
 	BufferedImage canvas = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 	
@@ -49,9 +54,11 @@ public class Game extends JPanel{
 	public void tick() {
 		if(!hasFocus())input.releaseAll();
 		else {
+			
+			Iterator<Entity> itr = entities.iterator();
+			for(int i = 0 ; i<entities.size(); i++)entities.get(i).tick();
 			input.tick();
-			for(Entity e : entities)e.tick();
-		}
+			}
 	}
 	
 	@Override

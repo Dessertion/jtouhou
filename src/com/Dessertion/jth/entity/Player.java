@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -17,8 +18,7 @@ public class Player extends DamageableEntity{
 	InputHandler input;
 	private boolean rightLeft = false, upDown = false;
 	private boolean mvX = false, mvY = false;
-	private int vx = 0, vy = 0;
-	private int rw = 2, rh = 2;
+	
 	public Player(Game game, InputHandler input) {
 		super(game, 1);
 		this.game = game;
@@ -34,9 +34,17 @@ public class Player extends DamageableEntity{
 		super.tick();
 		moveUtil();
 		//TODO implement collision detection for player w/ walls
+		if(input.attack.isDown())attack();
 	}
 	
-	public void moveUtil() {
+	private void attack() {
+		Bullet bullet = new Bullet(game, true, 1);
+		bullet.x = x;
+		bullet.y = y-2;
+		bullet.vy = -2;
+	}
+	
+	private void moveUtil() {
 		if (input.up.isDown() || input.down.isDown())
 			mvY = true;
 		else
@@ -92,7 +100,8 @@ public class Player extends DamageableEntity{
 		int w = 0, h = 0;
 		int xoff, yoff;
 		try {
-			img = ImageIO.read(getClass().getResourceAsStream("/res/player.png"));
+			File file = new File("./res/player.png");
+			img = ImageIO.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

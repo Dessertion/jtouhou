@@ -13,6 +13,9 @@ public abstract class Entity {
 	//coords
 	protected float x,y;
 	
+	protected float vx = 0, vy = 0;
+	protected int rw = 2, rh = 2;
+	
 	//render if entity still alive
 	protected boolean alive = true;	
 	
@@ -22,7 +25,7 @@ public abstract class Entity {
 	protected boolean stopped = false;
 	
 	public Entity(Game game) {
-		game.entities.add(this);
+		Game.entities.add(this);
 	}
 	
 	public Rectangle getRect() {
@@ -63,11 +66,11 @@ public abstract class Entity {
 
 	public abstract void tick();
 
-	public boolean move(int vx, int vy) {
+	public boolean move(float vx, float vy) {
 		if(vx!=0||vy!=0) {
 			x+=vx;
 			y+=vy;
-			rect.translate(vx, vy);
+			rect.translate((int)vx, (int)vy);
 			return !(stopped = false);
 		}
 		
