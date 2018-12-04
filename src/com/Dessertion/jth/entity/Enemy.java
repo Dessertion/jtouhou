@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.Dessertion.jth.Game;
+
 public class Enemy extends DamageableEntity{
 	
 	public static enum EnemyType{
@@ -44,6 +46,26 @@ public class Enemy extends DamageableEntity{
 	
 	public void tick() {
 		super.tick();
+		
+		//lol probably shouldve used vector math but o well
+		float dx = (Game.player.getX()-x);
+		float dy = (Game.player.getY()-y-20);
+		double ratio = dy/dx;
+		
+		double idir = Math.sqrt(1/(Math.pow(ratio, 2)+1));
+		if(dx<0)idir=-idir;
+		double jdir = ratio*idir;
+		if(Double.isNaN(jdir))jdir=-1;
+		attack(idir,jdir,0.25f);
+		
+	}
+	
+	private void attack(double idir, double jdir, float vTot) {
+		Bullet bullet = new Bullet(false,1,x,y+20);
+		bullet.setVTot(vTot);
+		bullet.setVx((float) (vTot*idir));
+		bullet.setVy((float) (vTot*jdir));
+		Game.spawn(bullet);
 	}
 
 	@Override

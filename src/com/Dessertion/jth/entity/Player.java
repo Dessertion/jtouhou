@@ -44,7 +44,7 @@ public class Player extends DamageableEntity{
 	private void attack() {
 		Bullet bullet = new Bullet(true, 1,x,y);
 		bullet.setVy(-2);
-		game.spawn(bullet);
+		Game.spawn(bullet);
 	}
 	
 	private void moveUtil() {

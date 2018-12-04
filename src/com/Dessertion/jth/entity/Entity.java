@@ -14,6 +14,7 @@ public abstract class Entity {
 	protected float x=0,y=0;
 	
 	protected float vx = 0, vy = 0;
+	protected float vTot = 0;
 	protected int rw = 0, rh = 0;
 	
 	//render if entity still alive
@@ -86,6 +87,14 @@ public abstract class Entity {
 		this.vy = vy;
 	}
 
+	public float getVTot() {
+		return vTot;
+	}
+	
+	public void setVTot(float v) {
+		vTot=v;
+	}
+	
 	public abstract void tick();
 
 	public boolean move(float vx, float vy) {

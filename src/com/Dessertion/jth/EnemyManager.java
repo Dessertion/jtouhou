@@ -44,7 +44,7 @@ public final class EnemyManager {
 	
 	
 	public static void init() { 
-		waves.add(new Wave(new Enemy[] {new Enemy(10,10,10,EnemyType.ALIEN)},200));
+		//waves.add(new Wave(new Enemy[] {new Enemy(10,10,10,EnemyType.ALIEN)},200));
 		tickTimer=0;
 	}
 	

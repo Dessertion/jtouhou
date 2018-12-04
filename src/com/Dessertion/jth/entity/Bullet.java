@@ -58,6 +58,7 @@ public class Bullet extends Entity{
 				// check if player
 				if (intersects(e)) {
 					if (e instanceof Player) {
+						System.out.println("aaaaaaaa");
 						// if friendly bullet do nothing
 						if (friendly)
 							continue;
@@ -67,8 +68,10 @@ public class Bullet extends Entity{
 							break;
 						}
 					}
-					((DamageableEntity) e).hurt(dmg);
-					remove();
+					if (friendly) {
+						((DamageableEntity) e).hurt(dmg);
+						remove();
+					}
 				}
 			}
 		}
