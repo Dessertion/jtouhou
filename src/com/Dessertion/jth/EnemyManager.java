@@ -4,8 +4,8 @@ import java.util.Comparator;
 import java.util.PriorityQueue;
 
 import com.Dessertion.jth.EnemyManager.Wave;
-import com.Dessertion.jth.entity.Enemy;
-import com.Dessertion.jth.entity.Enemy.EnemyType;
+import com.Dessertion.jth.entity.BasicEnemy;
+import com.Dessertion.jth.entity.BasicEnemy.EnemyType;
 
 public final class EnemyManager {
 	private static int tickTimer = 0;
@@ -13,17 +13,17 @@ public final class EnemyManager {
 	private static Wave cur = null;
 	
 	public static class Wave{
-		private Enemy[] arr;
+		private BasicEnemy[] arr;
 		private int tickTime;
 		public Wave() {
 			
 		}
 		public Wave(int n, int tickTime) {
-			arr = new Enemy[n];
+			arr = new BasicEnemy[n];
 			this.tickTime=tickTime;
 		}
 		
-		public Wave(Enemy[] arr, int tickTime) {
+		public Wave(BasicEnemy[] arr, int tickTime) {
 			this.arr=arr;
 			this.tickTime = tickTime;
 		}
@@ -54,7 +54,7 @@ public final class EnemyManager {
 			cur = waves.poll();
 		if (cur != null) {
 			if (tickTimer >= cur.getTickTime()) {
-				for (Enemy e : cur.arr) {
+				for (BasicEnemy e : cur.arr) {
 					Game.spawn(e);
 				}
 				cur = null;

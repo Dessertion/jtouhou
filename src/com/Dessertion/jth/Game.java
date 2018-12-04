@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import com.Dessertion.jth.entity.Bullet;
 import com.Dessertion.jth.entity.DamageableEntity;
-import com.Dessertion.jth.entity.Enemy;
-import com.Dessertion.jth.entity.Enemy.EnemyType;
+import com.Dessertion.jth.entity.BasicEnemy;
+import com.Dessertion.jth.entity.BasicEnemy.EnemyType;
 import com.Dessertion.jth.entity.Entity;
 import com.Dessertion.jth.entity.Player;
 
@@ -58,7 +58,7 @@ public class Game extends JPanel{
 		player = new Player(this, input);
 		spawn(player);
 		EnemyManager.init();
-		Enemy test = new Enemy(50,50,10,EnemyType.ALIEN);
+		BasicEnemy test = new BasicEnemy(50,50,10,EnemyType.ALIEN);
 		spawn(test);
 	}
 	

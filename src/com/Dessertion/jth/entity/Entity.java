@@ -15,6 +15,24 @@ public abstract class Entity {
 	
 	protected float vx = 0, vy = 0;
 	protected float vTot = 0;
+	protected float rx=0,ry=0;
+	
+	public float getRx() {
+	    return rx;
+	}
+
+	public void setRx(float rx) {
+	    this.rx = rx;
+	}
+
+	public float getRy() {
+	    return ry;
+	}
+
+	public void setRy(float ry) {
+	    this.ry = ry;
+	}
+
 	protected int rw = 0, rh = 0;
 	
 	//render if entity still alive
@@ -29,7 +47,9 @@ public abstract class Entity {
 	}
 	
 	protected void createHitBox() {
-		rect = new Rectangle((int)(x-rw/2),(int)(y-rh/2),rw,rh);
+	    	rx = x-rw/2;
+	    	ry = y-rh/2;
+		rect = new Rectangle((int)(rx),(int)(ry),rw,rh);
 	}
 	
 	protected boolean stopped = false;
@@ -96,19 +116,21 @@ public abstract class Entity {
 	}
 	
 	public abstract void tick();
-
+	
 	public boolean move(float vx, float vy) {
 		if(vx!=0||vy!=0) {
 			x+=vx;
 			y+=vy;
-			rect.translate((int)vx, (int)vy);
+			rx+=vx;
+			ry+=vy;
+			rect.setRect(rx, ry, rw, rh);
 			return !(stopped = false);
 		}
 		
 		return !(stopped=true);
 	}
 	
-
+	
 	public abstract void render(Graphics g);
 	
 	public boolean damage(DamageableEntity e, int damage) {
@@ -118,6 +140,6 @@ public abstract class Entity {
 		return false;
 	}
 	
-
+	
 	
 }	

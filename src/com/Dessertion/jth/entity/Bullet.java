@@ -23,7 +23,9 @@ public class Bullet extends Entity{
 		setBulletType(bulletType);
 		rw = bimg.getWidth();
 		rh = bimg.getHeight();
-		rect = new Rectangle((int)(x-rw/2),(int)(y-rh/2),rw,rh);
+		rx = x;
+		ry=y;
+		rect = new Rectangle((int)(rx),(int)(ry),rw,rh);
 	}
 	
 	private void setBulletType(int i) {
@@ -83,6 +85,7 @@ public class Bullet extends Entity{
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(bimg,(int) x, (int)y, null);
+		g.drawRect(rect.x, rect.y, rw, rh);
 	}
 
 }

@@ -5,12 +5,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
 import com.Dessertion.jth.Game;
 
-public class Enemy extends DamageableEntity{
+public class BasicEnemy extends DamageableEntity{
 	
 	public static enum EnemyType{
 		ALIEN("alien1.png");
@@ -25,8 +26,10 @@ public class Enemy extends DamageableEntity{
 	
 	private EnemyType type;
 	private BufferedImage img = null;
+	private Random random = new Random();
+	private int attackTimer = 240, attackFlag=0;
 	
-	public Enemy(float x, float y, int health, EnemyType type) {
+	public BasicEnemy(float x, float y, int health, EnemyType type) {
 		super(x,y,health);
 		this.type=type;
 		try {
@@ -49,19 +52,25 @@ public class Enemy extends DamageableEntity{
 		
 		//lol probably shouldve used vector math but o well
 		float dx = (Game.player.getX()-x);
-		float dy = (Game.player.getY()-y-20);
+		float dy = (Game.player.getY()-y);
 		double ratio = dy/dx;
 		
 		double idir = Math.sqrt(1/(Math.pow(ratio, 2)+1));
 		if(dx<0)idir=-idir;
 		double jdir = ratio*idir;
 		if(Double.isNaN(jdir))jdir=-1;
-		attack(idir,jdir,0.25f);
+		
+		if(attackTimer<=0) {
+		    attack(idir,jdir,0.25f);
+		    attackTimer = random.nextInt(200)+60;
+		}
+		attackTimer--;
+		
 		
 	}
 	
 	private void attack(double idir, double jdir, float vTot) {
-		Bullet bullet = new Bullet(false,1,x,y+20);
+		Bullet bullet = new Bullet(false,1,x,y);
 		bullet.setVTot(vTot);
 		bullet.setVx((float) (vTot*idir));
 		bullet.setVy((float) (vTot*jdir));
