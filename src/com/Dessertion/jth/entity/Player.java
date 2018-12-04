@@ -14,34 +14,37 @@ import com.Dessertion.jth.InputHandler;
 
 public class Player extends DamageableEntity{
 	
-	Game game;
-	InputHandler input;
+	Game game=null;
+	InputHandler input=null;
 	private boolean rightLeft = false, upDown = false;
 	private boolean mvX = false, mvY = false;
+	private int attackDelay = 5, attackFlag=0;
 	
 	public Player(Game game, InputHandler input) {
-		super(game, 1);
+		super(Game.WIDTH/2,Game.HEIGHT-50,1);
 		this.game = game;
 		this.input = input;
-		x = Game.WIDTH/2;
-		y = Game.HEIGHT-50;
-		rect = new Rectangle((int)x-rw/2, (int)y-rh/2,rw,rh);
-		
+		rw =2; rh = 2;
+		createHitBox();
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
+		
 		moveUtil();
 		//TODO implement collision detection for player w/ walls
-		if(input.attack.isDown())attack();
+		if(input.attack.isDown()&&attackFlag<=0) {
+			attack();
+			attackFlag=attackDelay;
+		}
+		attackFlag--;
 	}
 	
 	private void attack() {
-		Bullet bullet = new Bullet(game, true, 1);
-		bullet.x = x;
-		bullet.y = y-2;
-		bullet.vy = -2;
+		Bullet bullet = new Bullet(true, 1,x,y);
+		bullet.setVy(-2);
+		game.spawn(bullet);
 	}
 	
 	private void moveUtil() {

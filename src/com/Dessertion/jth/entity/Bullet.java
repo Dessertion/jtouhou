@@ -1,6 +1,7 @@
 package com.Dessertion.jth.entity;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,17 +12,18 @@ import com.Dessertion.jth.Game;
 
 public class Bullet extends Entity{
 
-	protected int dam;
-	protected boolean friendly;
+	protected int dmg=1;
+	protected boolean friendly = false;
 	
 	protected BufferedImage bimg = null;
 	
-	public Bullet(Game game, boolean friendly, int bulletType) {
-		super(game);
+	public Bullet(boolean friendly, int bulletType, float x, float y) {
+		super(x,y);
 		this.friendly = friendly;
 		setBulletType(bulletType);
 		rw = bimg.getWidth();
 		rh = bimg.getHeight();
+		rect = new Rectangle((int)(x-rw/2),(int)(y-rh/2),rw,rh);
 	}
 	
 	private void setBulletType(int i) {
@@ -42,27 +44,42 @@ public class Bullet extends Entity{
 		}
 	}
 	
+	public void setDamage(int dmg) {
+		this.dmg = dmg;
+	}
+	
 	@Override
 	public void tick() {
-		if(friendly) {
-			for (DamageableEntity e : Game.damageable) {
-				if(e instanceof Player)continue;
+		if(x<-10||x>Game.WIDTH+10)remove();
+		if(y<-10||y>Game.WIDTH+10)remove();
+
+		for (Entity e : Game.entities) {
+			if (e instanceof DamageableEntity) {
+				// check if player
 				if (intersects(e)) {
-					e.hurt(dam);
+					if (e instanceof Player) {
+						// if friendly bullet do nothing
+						if (friendly)
+							continue;
+						else {
+							((DamageableEntity) e).hurt(dmg);
+							remove();
+							break;
+						}
+					}
+					((DamageableEntity) e).hurt(dmg);
+					remove();
 				}
 			}
 		}
-		else {
-			if(intersects(Game.player)) {
-				Game.player.hurt(dam);
-			}
-		}
+		
+		
+		move(vx,vy);
 	}
 
 	@Override
 	public void render(Graphics g) {
-		// TODO Auto-generated method stub
-		
+		g.drawImage(bimg,(int) x, (int)y, null);
 	}
 
 }

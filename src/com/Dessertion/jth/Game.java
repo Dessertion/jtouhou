@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 
 import com.Dessertion.jth.entity.Bullet;
 import com.Dessertion.jth.entity.DamageableEntity;
+import com.Dessertion.jth.entity.Enemy;
+import com.Dessertion.jth.entity.Enemy.EnemyType;
 import com.Dessertion.jth.entity.Entity;
 import com.Dessertion.jth.entity.Player;
 
@@ -44,20 +46,33 @@ public class Game extends JPanel{
 		init(); 
 	}
 	
+	public static void spawn(Entity e) {
+		entities.add(e);
+		if(e instanceof Bullet)bullets.add((Bullet) e);
+	}
+	
 	private void init() {
 		
 		input = new InputHandler();
 		addKeyListener(input);
 		player = new Player(this, input);
+		spawn(player);
+		EnemyManager.init();
+		Enemy test = new Enemy(50,50,10,EnemyType.ALIEN);
+		spawn(test);
 	}
 	
 	public void tick() {
 		if(!hasFocus())input.releaseAll();
 		else {
-			
+			//remove dead entities
 			Iterator<Entity> itr = entities.iterator();
+			while(itr.hasNext())if(!itr.next().isAlive())itr.remove();
+			
 			for(int i = 0 ; i<entities.size(); i++)entities.get(i).tick();
 			input.tick();
+			
+			EnemyManager.tick();
 			}
 	}
 	

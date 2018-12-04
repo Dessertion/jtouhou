@@ -9,8 +9,8 @@ public abstract class DamageableEntity extends Entity{
 	//health
 	protected int hp, maxHp;
 	
-	public DamageableEntity(Game game, int health) {
-		super(game);
+	public DamageableEntity(float x, float y, int health) {
+		super(x,y);
 		hp = maxHp = health;
 		
 	}

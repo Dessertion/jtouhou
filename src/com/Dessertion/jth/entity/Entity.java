@@ -11,10 +11,10 @@ public abstract class Entity {
 	protected Rectangle rect;
 
 	//coords
-	protected float x,y;
+	protected float x=0,y=0;
 	
 	protected float vx = 0, vy = 0;
-	protected int rw = 2, rh = 2;
+	protected int rw = 0, rh = 0;
 	
 	//render if entity still alive
 	protected boolean alive = true;	
@@ -22,11 +22,17 @@ public abstract class Entity {
 	//tick time
 	protected int tickTime = 0;
 	
+	public Entity(float x, float y) {
+		this.x=x;
+		this.y=y;
+	}
+	
+	protected void createHitBox() {
+		rect = new Rectangle((int)(x-rw/2),(int)(y-rh/2),rw,rh);
+	}
+	
 	protected boolean stopped = false;
 	
-	public Entity(Game game) {
-		Game.entities.add(this);
-	}
 	
 	public Rectangle getRect() {
 		return rect;
@@ -62,6 +68,22 @@ public abstract class Entity {
 	
 	public void remove() {
 		alive = false;
+	}
+
+	public float getVx() {
+		return vx;
+	}
+
+	public void setVx(float vx) {
+		this.vx = vx;
+	}
+
+	public float getVy() {
+		return vy;
+	}
+
+	public void setVy(float vy) {
+		this.vy = vy;
 	}
 
 	public abstract void tick();
