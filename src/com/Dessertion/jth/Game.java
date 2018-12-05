@@ -2,6 +2,7 @@ package com.Dessertion.jth;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -31,7 +32,8 @@ public class Game extends JPanel{
 
 	public final static int WIDTH = 200, HEIGHT = 200;
 	public static final int SCALE = 3;
-	public boolean hasWon = false;
+	public static boolean hasWon = false;
+	public static boolean hasLost = false;
 	public static int tickTime = 0;
 	
 	public static Player player;
@@ -66,7 +68,7 @@ public class Game extends JPanel{
 		player = new Player(this, input);
 		spawn(player);
 		EnemyManager.init();
-		BasicEnemy test = new BasicEnemy(50,50,10,EnemyType.ALIEN);
+		BasicEnemy test = new BasicEnemy(50,50,10,EnemyType.ALIEN1);
 		spawn(test);
 		clip  = null;
 		try {
@@ -74,8 +76,9 @@ public class Game extends JPanel{
 		} catch (FileNotFoundException | JavaLayerException e) {
 			e.printStackTrace();
 		}
+		clip.loop();
 		clip.play();
-		
+	
 		
 	}
 	
@@ -91,8 +94,10 @@ public class Game extends JPanel{
 			
 			EnemyManager.tick();
 			}
+		if(hasLost) {
+		    if(input.attack.clicked)System.exit(0);
+		}
 		tickTime++;
-		if(tickTime==600)clip.stop();
 	}
 	
 	@Override
@@ -112,9 +117,18 @@ public class Game extends JPanel{
 		Graphics g2 = canvas.getGraphics();
 		renderBackground(g2);
 		renderSprites(g2);
+		if(hasLost)displayGameOver(g2);
 		repaint();
 		g.dispose();
 		g2.dispose();
+	}
+
+	private void displayGameOver(Graphics g) {
+	    g.setColor(Color.MAGENTA);
+	    g.setFont(new Font("Trebuchet MS",Font.BOLD,18));
+	    g.drawString("GAME OVER", 0, Game.HEIGHT/2);
+	    g.setFont(new Font("Trebuchet MS",Font.PLAIN,10));
+	    g.drawString("Press <Z> to exit", 0, Game.HEIGHT/2+18);
 	}
 
 	private void renderSprites(Graphics g) {

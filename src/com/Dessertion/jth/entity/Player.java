@@ -19,6 +19,7 @@ public class Player extends DamageableEntity{
 	private boolean rightLeft = false, upDown = false;
 	private boolean mvX = false, mvY = false;
 	private int attackDelay = 7, attackFlag=0;
+	public static int lives;
 	
 	public Player(Game game, InputHandler input) {
 		super(Game.WIDTH/2,Game.HEIGHT-50,1);
@@ -26,12 +27,24 @@ public class Player extends DamageableEntity{
 		this.input = input;
 		rw =4; rh = 4;
 		createHitBox();
+		lives = 3;
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
-		
+		if(!alive) {
+		    if(lives>0) {
+			//lol need a dying anim
+			lives--;
+			alive=true;
+			hp=maxHp;
+			teleport(Game.WIDTH/2,Game.HEIGHT-50);
+		    }
+		    else {
+			Game.hasLost=true;
+		    }
+		}
 		moveUtil();
 		//TODO implement collision detection for player w/ walls
 		if(input.attack.isDown()&&attackFlag<=0) {
@@ -96,6 +109,7 @@ public class Player extends DamageableEntity{
 		
 		move(vx,vy);
 	}
+	
 	
 	@Override
 	public void render(Graphics g) {

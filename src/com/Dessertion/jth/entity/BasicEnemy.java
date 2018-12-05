@@ -16,8 +16,10 @@ public class BasicEnemy extends DamageableEntity{
 	public static final int BOUNDINGY = 75;
 	
 	public static enum EnemyType{
-		ALIEN("alien1.png");
-		
+		ALIEN1("alien1.png"),
+		ALIEN2("alien2.png"),
+		BOSS("boss.png");
+	    
 		private final File file;
 		EnemyType(String s) {
 			file = new File("./res/" + s);
@@ -109,7 +111,6 @@ public class BasicEnemy extends DamageableEntity{
 			}
 			else {
 				if(inBounds) {
-				System.out.println("a");
 				vx*=0.98;
 				vy*=0.98;
 				}

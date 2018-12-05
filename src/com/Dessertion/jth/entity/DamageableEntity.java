@@ -14,9 +14,6 @@ public abstract class DamageableEntity extends Entity{
 		hp = maxHp = health;
 		
 	}
-
-	
-	
 	
 	
 	public boolean hurt(int damage) {
