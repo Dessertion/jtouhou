@@ -13,6 +13,8 @@ import com.Dessertion.jth.Game;
 
 public class BasicEnemy extends DamageableEntity{
 	
+	public static final int BOUNDINGY = 75;
+	
 	public static enum EnemyType{
 		ALIEN("alien1.png");
 		
@@ -22,12 +24,15 @@ public class BasicEnemy extends DamageableEntity{
 		}
 		
 		public File getFile() {return file;}
-	}
+	} 
 	
 	private EnemyType type;
 	private BufferedImage img = null;
 	private Random random = new Random();
-	private int attackTimer = 240, attackFlag=0;
+	private int attackTimer = 240, attackTimerMin = 60, attackTimerMax = 200;
+	private float vbullet = 0.25f;
+	private int stoppedTimer = 100;
+	private int moveTimer = 0;
 	
 	public BasicEnemy(float x, float y, int health, EnemyType type) {
 		super(x,y,health);
@@ -47,24 +52,79 @@ public class BasicEnemy extends DamageableEntity{
 		createHitBox();
 	}
 	
-	public void tick() {
-		super.tick();
-		
-		//lol probably shouldve used vector math but o well
-		float dx = (Game.player.getX()-x);
-		float dy = (Game.player.getY()-y);
+	public void setAttackTimer(int min, int max) {
+		attackTimerMin=min;
+		attackTimerMax=max;
+	}
+	
+	public void setBulletVelocity(float v) {
+		vbullet=v;
+	}
+	
+	private double[] getDir(double dx, double dy) {
 		double ratio = dy/dx;
 		
 		double idir = Math.sqrt(1/(Math.pow(ratio, 2)+1));
 		if(dx<0)idir=-idir;
 		double jdir = ratio*idir;
 		if(Double.isNaN(jdir))jdir=-1;
+		return new double[] {idir,jdir};
+	}
+	
+	public void tick() {
+		super.tick();
 		
-		if(attackTimer<=0) {
-		    attack(idir,jdir,0.25f);
-		    attackTimer = random.nextInt(200)+60;
-		}
-		attackTimer--;
+		//lol probably shouldve used vector math but o well
+		float dx = (Game.player.getX()-x);
+		float dy = (Game.player.getY()-y);
+		
+		double[] toPlayerDir = getDir(dx,dy);
+		if (attackTimer <= 0) {
+				attack(toPlayerDir[0], toPlayerDir[1], vbullet);
+				attackTimer = random.nextInt(attackTimerMax) + attackTimerMin;
+			}
+			attackTimer--;
+			
+		//check if within bounds
+		if(x>=0&&x<=Game.WIDTH&&y>=0&&y<=BOUNDINGY)inBounds=true;
+		else inBounds=false;
+			
+			//randomly move if movement flag checked
+			if(stopped) {
+				stoppedTimer--;
+				if (stoppedTimer <= 0) {
+					// pick some random x and y within bounding area, move towards it
+					int randx = random.nextInt(Game.WIDTH);
+					int randy = random.nextInt(BOUNDINGY);
+					float dx2 = randx - x;
+					float dy2 = randy - y;
+					float dis = (float) Math.sqrt((Math.pow(dx2, 2)+Math.pow(dy2, 2)));
+					double[] moveDir = getDir(dx2, dy2);
+					vx=(float) moveDir[0];
+					vy=(float) moveDir[1];
+					stopped=false;
+					moveTimer = (int) dis;
+					stoppedTimer=random.nextInt(240)+120;
+				}
+			}
+			else {
+				if(inBounds) {
+				System.out.println("a");
+				vx*=0.98;
+				vy*=0.98;
+				}
+				if(moveTimer<=0) {
+					vx=0;
+					vy=0;
+					stopped=true;
+				}
+				moveTimer--;
+			}
+			move(vx,vy);
+			
+		
+		
+		
 		
 		
 	}
@@ -89,7 +149,7 @@ public class BasicEnemy extends DamageableEntity{
 		
 		//hitbox for clarity
 		g.setColor(Color.red);
-		g.fillRect(rect.x,rect.y,rw,rh);
+		g.drawRect(rect.x,rect.y,rw,rh);
 	}
 	
 }

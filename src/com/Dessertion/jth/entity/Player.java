@@ -18,13 +18,13 @@ public class Player extends DamageableEntity{
 	InputHandler input=null;
 	private boolean rightLeft = false, upDown = false;
 	private boolean mvX = false, mvY = false;
-	private int attackDelay = 5, attackFlag=0;
+	private int attackDelay = 7, attackFlag=0;
 	
 	public Player(Game game, InputHandler input) {
 		super(Game.WIDTH/2,Game.HEIGHT-50,1);
 		this.game = game;
 		this.input = input;
-		rw =2; rh = 2;
+		rw =4; rh = 4;
 		createHitBox();
 	}
 	
@@ -43,7 +43,7 @@ public class Player extends DamageableEntity{
 	
 	private void attack() {
 		Bullet bullet = new Bullet(true, 1,x,y);
-		bullet.setVy(-2);
+		bullet.setVy(-4);
 		Game.spawn(bullet);
 	}
 	
@@ -63,13 +63,13 @@ public class Player extends DamageableEntity{
 			if (!(input.up.isDown() ^ input.down.isDown())) {
 				//check if first time both are held down
 				if (!upDown) {
-					vy = vy > 0 ? -1 : 1;
+					vy = vy > 0 ? -1.5f : 1.5f;
 					upDown = true;
 				}
 			} else {
 				//otherwise move in normal direction
 				upDown = false;
-				vy = input.up.isDown()? -1:1;
+				vy = input.up.isDown()? -1.5f:1.5f;
 			}
 		} else {
 			upDown = false;
@@ -80,12 +80,12 @@ public class Player extends DamageableEntity{
 		if(mvX) {
 			if(!(input.left.isDown()^input.right.isDown())) {
 				if(!rightLeft) {
-					vx = vx > 0? -1 : 1;
+					vx = vx > 0? -1.5f: 1.5f;
 					rightLeft = true;
 				}
 			} else {
 				rightLeft = false;
-				vx = input.left.isDown()? -1:1;
+				vx = input.left.isDown()? -1.5f:1.5f;
 			}
 		} else {
 			rightLeft = false;

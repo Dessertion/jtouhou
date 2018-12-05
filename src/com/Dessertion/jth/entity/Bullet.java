@@ -60,7 +60,6 @@ public class Bullet extends Entity{
 				// check if player
 				if (intersects(e)) {
 					if (e instanceof Player) {
-						System.out.println("aaaaaaaa");
 						// if friendly bullet do nothing
 						if (friendly)
 							continue;

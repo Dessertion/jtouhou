@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,6 +15,10 @@ import com.Dessertion.jth.entity.Bullet;
 import com.Dessertion.jth.entity.DamageableEntity;
 import com.Dessertion.jth.entity.BasicEnemy;
 import com.Dessertion.jth.entity.BasicEnemy.EnemyType;
+import com.Dessertion.jth.sound.MPEGClip;
+
+import javazoom.jl.decoder.JavaLayerException;
+
 import com.Dessertion.jth.entity.Entity;
 import com.Dessertion.jth.entity.Player;
 
@@ -24,9 +29,10 @@ public class Game extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public final static int WIDTH = 160, HEIGHT = 160;
-	public static final int SCALE = 4;
+	public final static int WIDTH = 200, HEIGHT = 200;
+	public static final int SCALE = 3;
 	public boolean hasWon = false;
+	public static int tickTime = 0;
 	
 	public static Player player;
 	
@@ -36,6 +42,8 @@ public class Game extends JPanel{
 	public static ArrayList<Bullet> bullets = new ArrayList<>();
 	
 	BufferedImage canvas = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
+	
+	private MPEGClip clip;
 	
 	public Game() {
 		setSize(new Dimension((WIDTH*SCALE),HEIGHT*SCALE));
@@ -60,6 +68,15 @@ public class Game extends JPanel{
 		EnemyManager.init();
 		BasicEnemy test = new BasicEnemy(50,50,10,EnemyType.ALIEN);
 		spawn(test);
+		clip  = null;
+		try {
+			clip = new MPEGClip("./res/[07] Dancing Water Spray.mp3");
+		} catch (FileNotFoundException | JavaLayerException e) {
+			e.printStackTrace();
+		}
+		clip.play();
+		
+		
 	}
 	
 	public void tick() {
@@ -74,6 +91,8 @@ public class Game extends JPanel{
 			
 			EnemyManager.tick();
 			}
+		tickTime++;
+		if(tickTime==600)clip.stop();
 	}
 	
 	@Override

@@ -41,6 +41,17 @@ public abstract class Entity {
 	//tick time
 	protected int tickTime = 0;
 	
+	protected boolean inBounds;
+	
+	
+	public boolean isInBounds() {
+		return inBounds;
+	}
+
+	public void setInBounds(boolean inBounds) {
+		this.inBounds = inBounds;
+	}
+
 	public Entity(float x, float y) {
 		this.x=x;
 		this.y=y;
