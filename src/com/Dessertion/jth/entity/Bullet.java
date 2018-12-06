@@ -18,7 +18,7 @@ public class Bullet extends Entity{
 	protected BufferedImage bimg = null;
 	
 	public Bullet(boolean friendly, int bulletType, float x, float y) {
-		super(x,y);
+		super((x-=3),y);
 		this.friendly = friendly;
 		setBulletType(bulletType);
 		rw = bimg.getWidth();
@@ -34,8 +34,14 @@ public class Bullet extends Entity{
 		case 1:
 			file = new File("./res/bullet1.png");
 			break;
+		case 2:
+			file = new File("./res/bullet2.png");
+			break;
+		case 3:
+			file = new File("./res/bullet3.png");
+			break;
 		default:
-			file = null;
+			file = new File("./res/error.png");
 			break;
 		}
 		
@@ -84,7 +90,6 @@ public class Bullet extends Entity{
 	@Override
 	public void render(Graphics g) {
 		g.drawImage(bimg,(int) x, (int)y, null);
-		g.drawRect(rect.x, rect.y, rw, rh);
 	}
 
 }

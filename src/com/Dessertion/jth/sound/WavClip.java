@@ -12,6 +12,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class WavClip {
 	private Clip clip;
+	private boolean playing=false;
 	
 	public WavClip() {
 
@@ -44,9 +45,24 @@ public class WavClip {
 		loadClip(file);
 	}
 
+	public void setPlaying(boolean playing) {
+		this.playing=playing;
+	}
+	
+	public boolean isPlaying() {
+		return playing;
+	}
+	
 	public void play() {
-		clip.setFramePosition(0);
-		clip.start();
+		try {
+			new Thread() {
+				public void run() {
+					clip.start();
+				}
+			}.start();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void loop() {

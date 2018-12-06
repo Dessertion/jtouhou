@@ -151,6 +151,7 @@ public abstract class Entity {
 	this.y=y;
 	rx+=dx;
 	ry+=dy;
+	rect = new Rectangle((int)rx,(int)ry,rw,rh);
     }
 
 }

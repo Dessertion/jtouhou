@@ -9,19 +9,17 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
 import com.Dessertion.jth.entity.Bullet;
 import com.Dessertion.jth.entity.DamageableEntity;
-import com.Dessertion.jth.entity.BasicEnemy;
-import com.Dessertion.jth.entity.BasicEnemy.EnemyType;
-import com.Dessertion.jth.sound.MPEGClip;
-
-import javazoom.jl.decoder.JavaLayerException;
-
 import com.Dessertion.jth.entity.Entity;
 import com.Dessertion.jth.entity.Player;
+import com.Dessertion.jth.sound.Sound;
+
+import javazoom.jl.decoder.JavaLayerException;
 
 public class Game extends JPanel{
 	
@@ -35,17 +33,21 @@ public class Game extends JPanel{
 	public static boolean hasWon = false;
 	public static boolean hasLost = false;
 	public static int tickTime = 0;
+	public static boolean bossFight = false;
+	private Random random = new Random();
 	
 	public static Player player;
 	
 	private InputHandler input;
+	private boolean musicChanged = false;
+	
+	
 	public static ArrayList<Entity> entities = new ArrayList<>();
 	public static ArrayList<DamageableEntity> damageable = new ArrayList<>();
 	public static ArrayList<Bullet> bullets = new ArrayList<>();
 	
 	BufferedImage canvas = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 	
-	private MPEGClip clip;
 	
 	public Game() {
 		setSize(new Dimension((WIDTH*SCALE),HEIGHT*SCALE));
@@ -62,24 +64,20 @@ public class Game extends JPanel{
 	}
 	
 	private void init() {
-		
-		input = new InputHandler();
-		addKeyListener(input);
-		player = new Player(this, input);
-		spawn(player);
-		EnemyManager.init();
-		BasicEnemy test = new BasicEnemy(50,50,10,EnemyType.ALIEN1);
-		spawn(test);
-		clip  = null;
 		try {
-			clip = new MPEGClip("./res/[07] Dancing Water Spray.mp3");
+			Sound.init();
 		} catch (FileNotFoundException | JavaLayerException e) {
 			e.printStackTrace();
 		}
-		clip.loop();
-		clip.play();
-	
+		Sound.bgm.loop();
 		
+		input = new InputHandler();
+		addKeyListener(input);
+		
+		player = new Player(this, input);
+		spawn(player);
+		
+		EnemyManager.init();
 	}
 	
 	public void tick() {
@@ -97,6 +95,11 @@ public class Game extends JPanel{
 		if(hasLost) {
 		    if(input.attack.clicked)System.exit(0);
 		}
+		if(bossFight&&!musicChanged) {
+			Sound.bgm.stop();
+			Sound.bosstheme.loop();
+			musicChanged=true;
+		}
 		tickTime++;
 	}
 	
@@ -107,8 +110,12 @@ public class Game extends JPanel{
 	
 	private void renderBackground(Graphics g) {
 		//TODO: actual background rendering lol
-		g.setColor(Color.WHITE);
+		g.setColor(new Color(18,6,63));
 		g.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
+		g.setColor(Color.WHITE);
+		for(int i = 0 ; i < 50; i++) {
+			g.drawOval(random.nextInt(Game.WIDTH), random.nextInt(Game.HEIGHT), 1, 1);
+		}
 	}
 
 	public void render() {

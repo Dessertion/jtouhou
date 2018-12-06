@@ -60,7 +60,7 @@ public class Core implements Runnable {
 		System.out.println("CURRENT TIME: " + System.nanoTime());
 		
 		
-		while (isRunning&&!game.hasWon) {
+		while (isRunning) {
 			
 			int updateCount = 0;
 			
@@ -102,10 +102,7 @@ public class Core implements Runnable {
 					ticks = 0;
 					lastSecondTime = currentSecond;
 				}
-				
-				
-				
-
+			
 			}
 
 		}
