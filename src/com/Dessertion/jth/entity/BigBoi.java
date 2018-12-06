@@ -32,7 +32,9 @@ public class BigBoi extends BasicEnemy {
 			die();
 		if (!alive) {
 			Game.hasWon = true;
+			Game.winTime=Game.tickTime;
 			Sound.ko.play();
+			
 		}
 			
 		if(currentAttack.isFinished())super.tryMove();
@@ -67,8 +69,8 @@ public class BigBoi extends BasicEnemy {
 		super.render(g);
 		g.setColor(Color.red);
 		g.setFont(new Font("Trebuchet MS",Font.PLAIN,8));
-		g.drawString("BOSS HP", 5, Game.HEIGHT-15);
-		g.drawLine(5,Game.HEIGHT-5,5+(Game.WIDTH-10)*hp/maxHp,Game.HEIGHT-5);
+		g.drawString("BOSS HP", 5, Game.HEIGHT-25);
+		g.drawLine(5,Game.HEIGHT-15,(int)(5+((float)(Game.WIDTH-10)*hp/maxHp)),Game.HEIGHT-15);
 	}
 
 	protected AttackType randomAttackType() {

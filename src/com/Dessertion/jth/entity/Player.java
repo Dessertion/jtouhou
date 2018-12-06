@@ -24,6 +24,8 @@ public class Player extends DamageableEntity {
 	private BufferedImage img = null;
 	private int w = 0, h=0, xoff,yoff;
 	public double dmg;
+	private int invulnWindow = 240;
+	private int damageTime = -1;
 	
 	public Player(Game game, InputHandler input) {
 		super(Game.WIDTH / 2, Game.HEIGHT - 50, 1);
@@ -46,7 +48,7 @@ public class Player extends DamageableEntity {
 		rw = 4;
 		rh = 4;
 		createHitBox();
-		lives = 2;
+		lives = 3;
 	}
 
 	@Override
@@ -59,6 +61,7 @@ public class Player extends DamageableEntity {
 				alive = true;
 				hp = maxHp;
 				teleport(Game.WIDTH / 2, Game.HEIGHT - 50);
+				damageTime=tickTime;
 			} else {
 				Sound.shoot.stop();
 				Game.hasLost = true;
@@ -67,7 +70,6 @@ public class Player extends DamageableEntity {
 		moveUtil();
 		if (input.attack.isDown()) {
 			if (!Sound.shoot.isPlaying()) {
-					System.out.println("aa");
 					Sound.shoot.loop();
 				}
 			if (attackFlag <= 0) {
@@ -88,6 +90,14 @@ public class Player extends DamageableEntity {
 		bullet.setDamage((int)dmg);
 		Game.spawn(bullet);
 	}
+	
+	@Override
+	public boolean hurt(int damage) {
+		if(tickTime-damageTime>invulnWindow) {
+			return super.hurt(damage);
+		}
+		else return false;
+	};
 
 	private void moveUtil() {
 		if (input.up.isDown() || input.down.isDown())
@@ -145,11 +155,20 @@ public class Player extends DamageableEntity {
 	public void render(Graphics g) {
 		xoff = (int) (x - w / 2);
 		yoff = (int) (y - h / 2);
-		g.drawImage(img, (int) xoff, (int) yoff, w, h, null);
+		if(tickTime-damageTime<=invulnWindow) {
+			if(tickTime%2==0)g.drawImage(img, (int) xoff, (int) yoff, w, h, null);
+		}
+		else g.drawImage(img, (int) xoff, (int) yoff, w, h, null);
 		
 		// hitbox for clarity
 //		g.setColor(Color.red);
 //		g.fillRect(rect.x, rect.y, rw, rh);
+	}
+	
+	public void render(Graphics g, int scale) {
+		xoff = (int) (x - w / 2);
+		yoff = (int) (y - h / 2);
+		g.drawImage(img, (int) xoff, (int) yoff, w*scale, h*scale, null);
 	}
 
 }
